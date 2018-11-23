@@ -38,7 +38,7 @@ LIB_PATH = ./lib/
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
 
-all: $(EXECS)
+all: $(EXECS) clean
 
 rythme : $(LIB_OBJ) $(LIB_SRC) $(OBJS)
 	$(CC) $(CFLAGS) $(LIB_OBJ) -L$(LIB_PATH) $(OBJS) -o $(EXECS) -lsndfile -lvorbis -lvorbisenc -logg -lFLAC -lm -lfftw3
@@ -47,4 +47,4 @@ clean :
 	rm -f *.o
 
 cleanall :
-	rm -f *.o *~
+	rm -f *.o *~ $(EXECS)
