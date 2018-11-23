@@ -9,7 +9,8 @@ fft_init (complex in[FRAME_SIZE], complex spec[FRAME_SIZE])
 void
 fft_exit (fftw_plan plan)
 {
-  fftw_destroy_plan (plan);
+    fftw_destroy_plan(plan);
+    fftw_cleanup();
 }
 
 void

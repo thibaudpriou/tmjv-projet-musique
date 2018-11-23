@@ -24,3 +24,13 @@ Exemples d'informations :
 - Suite d'accords
 - Spectrogramme
 - Interprétation musicale
+
+
+## NOTES
+chroma = vecteur de dimension 12 récupéré à partir d'un spectre
+
+types de chromas améliorés
+HPCP
+EHPCP
+
+D'abord faire une conversion de l'index de la fft vers la frequence puis de la freq vers la note

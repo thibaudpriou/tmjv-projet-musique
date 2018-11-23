@@ -1,7 +1,7 @@
 #ifndef SAMPLES_H
 #define SAMPLES_H
 
-#include <sndfile.h>
+#include "lib/sndfile.h"
 #include "common.h"
 
 void fill_buffer(double *, double *);
