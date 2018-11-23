@@ -36,13 +36,10 @@ LIB_OBJ = $(LIB_SRC:.c=.o)
 EXECS = rythme
 LIB_PATH = ./lib/
 
-
-#sudo apt-get install libvorbis-dev libflac-dev
-
 all: $(EXECS)
 
 rythme : $(LIB_OBJ) $(LIB_SRC) rythme.c
-	$(CC) $(CFLAGS) $(LIB_OBJ) -L$(LIB_PATH) rythme.c -o $(EXECS) -lsndfile  -lvorbis -lvorbisenc -logg -lFLAC -lm -lfftw3
+	$(CC) $(CFLAGS) $(LIB_OBJ) -L$(LIB_PATH) rythme.c -o $(EXECS) -lsndfile -lvorbis -lvorbisenc -logg -lFLAC -lm -lfftw3
 
 clean :
 	rm -f *.o
