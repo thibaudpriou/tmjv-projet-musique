@@ -1,7 +1,7 @@
 # Projet d'analyse musique TMJV
 
 
-'''sudo apt install libflac-dev libvorbis-dev'''
+'''sudo apt install libflac-dev libvorbis-dev gnuplot'''
 
 Pour installe FFTW :
 '''wget http://fftw.org/fftw-3.3.8.tar.gz'''
