@@ -1,0 +1,17 @@
+# Projet d'analyse musique TMJV
+
+
+'''sudo apt install libflac-dev libvorbis-dev'''
+
+
+## But
+Sortir des informations d'un fichier WAV. Ces informations sont celles qui ont été vus en cours et mais aussi tout ce qui peut être jugé utile.
+
+Interface : GUI ou CLI au choix.
+
+Exemples d'informations :
+- Tempo
+- Tonalité
+- Suite d'accords
+- Spectrogramme
+- Interprétation musicale
