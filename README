@@ -3,6 +3,14 @@
 
 '''sudo apt install libflac-dev libvorbis-dev'''
 
+Pour installe FFTW :
+'''wget http://fftw.org/fftw-3.3.8.tar.gz'''
+'''tar -xzf fftw-3.3.8.tar.gz'''
+'''cd fftw-3.3.8/'''
+'''./configure'''
+'''make'''
+'''sudo make install'''
+
 
 ## But
 Sortir des informations d'un fichier WAV. Ces informations sont celles qui ont été vus en cours et mais aussi tout ce qui peut être jugé utile.
@@ -10,6 +18,7 @@ Sortir des informations d'un fichier WAV. Ces informations sont celles qui ont �
 Interface : GUI ou CLI au choix.
 
 Exemples d'informations :
+
 - Tempo
 - Tonalité
 - Suite d'accords
