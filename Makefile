@@ -35,11 +35,13 @@ LIB_SRC =  ./lib/gnuplot_i.c
 LIB_OBJ = $(LIB_SRC:.c=.o)
 EXECS = rythme
 LIB_PATH = ./lib/
+SRCS = $(wildcard *.c)
+OBJS = $(SRCS:.c=.o)
 
 all: $(EXECS)
 
-rythme : $(LIB_OBJ) $(LIB_SRC) rythme.c
-	$(CC) $(CFLAGS) $(LIB_OBJ) -L$(LIB_PATH) rythme.c -o $(EXECS) -lsndfile -lvorbis -lvorbisenc -logg -lFLAC -lm -lfftw3
+rythme : $(LIB_OBJ) $(LIB_SRC) $(OBJS)
+	$(CC) $(CFLAGS) $(LIB_OBJ) -L$(LIB_PATH) $(OBJS) -o $(EXECS) -lsndfile -lvorbis -lvorbisenc -logg -lFLAC -lm -lfftw3
 
 clean :
 	rm -f *.o
