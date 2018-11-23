@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <sndfile.h>
+#include "lib/sndfile.h"
 
 #include <math.h>
 #include "lib/gnuplot_i.h"
