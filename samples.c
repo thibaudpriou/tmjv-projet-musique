@@ -7,12 +7,12 @@ fill_buffer(double *buffer, double *new_buffer)
   double tmp[FRAME_SIZE-HOP_SIZE];
 
   /* save */
-  for (i=0;i<FRAME_SIZE-HOP_SIZE;i++){
+  for (i=0; i<FRAME_SIZE-HOP_SIZE; i++){
     tmp[i] = buffer[i+HOP_SIZE];
   }
-  
+
   /* save offset */
-  for (i=0;i<(FRAME_SIZE-HOP_SIZE);i++) {
+  for (i=0; i<(FRAME_SIZE-HOP_SIZE); i++) {
     buffer[i] = tmp[i];
   }
 

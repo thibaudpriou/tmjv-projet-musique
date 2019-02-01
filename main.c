@@ -207,7 +207,7 @@ main(int argc, char * argv [])
   gnuplot_plot_x(h,gamma,nb_frames_in,"Peigne");
   sleep(2);
 
-  sf_close(infile);
+  // sf_close(infile);
 
   /* Synthesis beat tracker */
   // if((infile = sf_open(infilename, SFM_READ, &sfinfo)) == NULL) {
