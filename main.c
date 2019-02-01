@@ -19,6 +19,12 @@ print_usage(char *progname)
   puts("\n");
 }
 
+double
+fft_index_to_freq(int index, double sampling_rate, int frame_size)
+{
+	return index * sampling_rate / frame_size;
+}
+
 int
 main(int argc, char * argv [])
 {
@@ -53,8 +59,7 @@ main(int argc, char * argv [])
     return 1;
   }
 
-  int nb_frames_in = (int)sfinfo.frames/HOP_SIZE;
-
+  int nb_frames_in = (int) sfinfo.frames/HOP_SIZE;
 
   /* Open the output file. */
   if((outfile = sf_open(outfilename, SFM_WRITE, &sfinfo)) == NULL) {
@@ -106,7 +111,7 @@ main(int argc, char * argv [])
 
     // fft input
     for(i = 0; i < FRAME_SIZE; i++) {
-        samples[i] = buffer[i];
+      samples[i] = buffer[i];
     }
 
     fft_process(plan);
@@ -116,6 +121,11 @@ main(int argc, char * argv [])
       amplitude_prev[i] = amplitude[i];
       amplitude[i] = cabs(spec[i]);
     }
+
+		/* PLOT */
+		gnuplot_resetplot(h);
+		gnuplot_plot_x(h, amplitude, FRAME_SIZE, "FFT");
+		sleep(1);
 
     /* SPECTRAL FLUX !!! */
     FS = 0.0;
@@ -160,9 +170,9 @@ main(int argc, char * argv [])
   int imax = getTempoEstimation(nb_frames_in,spectralFlux);
 
   printf("max autocorrelation %d\n", imax);
-  printf("période en seconde %f\n", (double)imax*HOP_SIZE/44100.0);
-  printf("Fréquence en Hz %f\n", 44100.0 / ((double)imax*HOP_SIZE));
-  printf("Tempo en BPM %f\n", 60.0/((double)imax*HOP_SIZE/44100.0));
+  printf("période en seconde %f\n", (double)imax * HOP_SIZE / sfinfo.samplerate);
+  printf("Fréquence en Hz %f\n", sfinfo.samplerate / ((double)imax*HOP_SIZE));
+  printf("Tempo en BPM %f\n", 60.0 / ((double)imax * HOP_SIZE / sfinfo.samplerate));
 
   /* PLOT */
   /*
