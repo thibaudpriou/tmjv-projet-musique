@@ -33,14 +33,14 @@ CFLAGS = -O3 -I. -Wall -lm #-pg -g
 
 LIB_SRC =  ./lib/gnuplot_i.c
 LIB_OBJ = $(LIB_SRC:.c=.o)
-EXECS = rythme
+EXECS = audioAnalyser
 LIB_PATH = ./lib/
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
 
 all: $(EXECS) clean
 
-rythme : $(LIB_OBJ) $(LIB_SRC) $(OBJS)
+audioAnalyser : $(LIB_OBJ) $(LIB_SRC) $(OBJS)
 	$(CC) $(CFLAGS) $(LIB_OBJ) -L$(LIB_PATH) $(OBJS) -o $(EXECS) -lsndfile -lvorbis -lvorbisenc -logg -lFLAC -lm -lfftw3
 
 clean :
