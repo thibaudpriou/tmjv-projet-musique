@@ -151,9 +151,9 @@ main(int argc, char * argv [])
     }
 
     /* SAVE */
-    if(write_samples(outfile, buffer, sfinfo.channels)!=1){
-      printf("saving problem !! \n");
-    }
+    // if(write_samples(outfile, buffer, sfinfo.channels)!=1){
+    //   printf("saving problem !! \n");
+    // }
 
 
     nb_frames++;
@@ -247,32 +247,31 @@ main(int argc, char * argv [])
     }
   }
 
-  nb_frames=0;
-
-  while(read_samples(infile, new_buffer, sfinfo.channels)==1)
-  {
-    /* Process Samples */
-    printf("Step 2 : Processing frame %d\n",nb_frames);
-    /* hop size */
-    fill_buffer(buffer, new_buffer);
-
-    if(nb_frames % imax ==(imax - peigne_imax)) /* beat located */
-    {
-      /* sin synthesis */
-
-      for(i = 0; i < FRAME_SIZE; i++)
-      {
-        buffer[i] +=(0.5*sin(2*M_PI*1760.0*(double)i/sfinfo.samplerate)) *
-       (0.5-0.5*cos(2.0*M_PI*(double)i/FRAME_SIZE));;
-      }
-    }
-
-    /* SAVE */
-    if(write_samples(outfile, buffer, sfinfo.channels)!=1){
-      printf("saving problem !! \n");
-    }
-    nb_frames++;
-  }
+  // nb_frames=0;
+  // while(read_samples(infile, new_buffer, sfinfo.channels)==1)
+  // {
+  //   /* Process Samples */
+  //   printf("Step 2 : Processing frame %d\n",nb_frames);
+  //   /* hop size */
+  //   fill_buffer(buffer, new_buffer);
+	//
+  //   if(nb_frames % imax ==(imax - peigne_imax)) /* beat located */
+  //   {
+  //     /* sin synthesis */
+	//
+  //     for(i = 0; i < FRAME_SIZE; i++)
+  //     {
+  //       buffer[i] +=(0.5*sin(2*M_PI*1760.0*(double)i/sfinfo.samplerate)) *
+  //      (0.5-0.5*cos(2.0*M_PI*(double)i/FRAME_SIZE));;
+  //     }
+  //   }
+	//
+  //   /* SAVE */
+  //   if(write_samples(outfile, buffer, sfinfo.channels)!=1){
+  //     printf("saving problem !! \n");
+  //   }
+  //   nb_frames++;
+  // }
 
 
   sf_close(infile);
