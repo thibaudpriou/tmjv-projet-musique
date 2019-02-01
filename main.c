@@ -53,7 +53,8 @@ main(int argc, char * argv [])
     return 1;
   }
 
-  int nb_frames_in =(int)sfinfo.frames/HOP_SIZE;
+  int nb_frames_in = (int)sfinfo.frames/HOP_SIZE;
+
 
   /* Open the output file. */
   if((outfile = sf_open(outfilename, SFM_WRITE, &sfinfo)) == NULL) {
@@ -185,7 +186,7 @@ main(int argc, char * argv [])
   for(int tau = 0; tau < nb_frames_in; tau++) {
     gamma[tau]=0;
     for(int i = 0; i < nb_frames_in-tau; i++) {
-	    gamma[tau] +=(spectralFlux[i]*peigne[i+tau])/(double)nb_frames_in;
+	    gamma[tau] += (spectralFlux[i] * peigne[i+tau]) / (double)nb_frames_in;
 	    //gamma[tau]/=(1.0/nb_frames);
 		}
   }
