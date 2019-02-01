@@ -166,11 +166,11 @@ main(int argc, char * argv [])
   sleep(2);
 
   /* TEMPO ESTIMATION */
-  int imax = tempo(nb_frames_in,spectralFlux);
+  int imax = getTempoEstimation(nb_frames_in,spectralFlux);
 
-  printf("max autocorrelation %d\n",imax);
-  printf("période en seconde %f\n",(double)imax*HOP_SIZE/44100.0);
-  printf("Fréquence en Hz %f\n", 44100.0/((double)imax*HOP_SIZE));
+  printf("max autocorrelation %d\n", imax);
+  printf("période en seconde %f\n", (double)imax*HOP_SIZE/44100.0);
+  printf("Fréquence en Hz %f\n", 44100.0 / ((double)imax*HOP_SIZE));
   printf("Tempo en BPM %f\n", 60.0/((double)imax*HOP_SIZE/44100.0));
 
   /* PLOT */

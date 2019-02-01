@@ -1,6 +1,6 @@
 #include "rythme.h"
 
-int tempo(int nb_frames,double *data){
+int getTempoEstimation(int nb_frames, double *data){
 	double gamma[nb_frames];
 
   for(int tau = 0; tau < nb_frames; tau++)
