@@ -210,20 +210,20 @@ main(int argc, char * argv [])
   sf_close(infile);
 
   /* Synthesis beat tracker */
-  if((infile = sf_open(infilename, SFM_READ, &sfinfo)) == NULL) {
-    printf("Not able to open input file %s.\n", infilename);
-    puts(sf_strerror(NULL));
-    return 1;
-  }
-
-  for(i=0; i<(FRAME_SIZE/HOP_SIZE-1); i++) {
-    if(read_samples(infile, new_buffer, sfinfo.channels)==1){
-	    fill_buffer(buffer, new_buffer);
-    } else {
-      printf("not enough samples !!\n");
-      return 1;
-    }
-  }
+  // if((infile = sf_open(infilename, SFM_READ, &sfinfo)) == NULL) {
+  //   printf("Not able to open input file %s.\n", infilename);
+  //   puts(sf_strerror(NULL));
+  //   return 1;
+  // }
+	//
+  // for(i=0; i<(FRAME_SIZE/HOP_SIZE-1); i++) {
+  //   if(read_samples(infile, new_buffer, sfinfo.channels)==1){
+	//     fill_buffer(buffer, new_buffer);
+  //   } else {
+  //     printf("not enough samples !!\n");
+  //     return 1;
+  //   }
+  // }
 
   sf_close(infile);
   sf_close(outfile);
