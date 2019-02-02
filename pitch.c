@@ -50,10 +50,10 @@ detect_pitch_mode(int histogram[NB_NOTES_OCTAVE], int *pitch, int *mode)
   int major_pitch = 0, minor_pitch = 0;
 
   double* minor_profil = get_minor_profil();
-  double* major_profil = get_minor_profil();
+  double* major_profil = get_major_profil();
 
-  double major_corr = detect_pitch(histogram, major_profil, &major_pitch);
   double minor_corr = detect_pitch(histogram, minor_profil, &minor_pitch);
+  double major_corr = detect_pitch(histogram, major_profil, &major_pitch);
 
   if (major_corr > minor_corr) {
     *pitch = major_pitch;

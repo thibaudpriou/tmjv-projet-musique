@@ -20,6 +20,10 @@ freq2chro_idx(double freq, int chroma_size)
 void
 computeChromas(complex *fft, size_t fft_size, double sample_rate, double chromas[NB_NOTES_OCTAVE])
 {
+  for (size_t i = 0; i < NB_NOTES_OCTAVE; i++){
+    chromas[i] = 0;
+  }
+
   int bin_chroma;
   double freq, amplitude;
   for (size_t i = 0; i < fft_size/2; i++)
