@@ -11,18 +11,15 @@
 #include "rythme.h"
 #include "samples.h"
 #include "fft.h"
+#include "note.h"
+#include "pitch.h"
+#include "chromas.h"
 
 void
 print_usage(char *progname)
 {
   printf("\n Usage : %s <input file> <output file>\n", progname);
   puts("\n");
-}
-
-double
-fft_index_to_freq(int index, double sampling_rate, int frame_size)
-{
-	return index * sampling_rate / frame_size;
 }
 
 int
@@ -123,8 +120,14 @@ main(int argc, char * argv [])
     }
 
 		/* PLOT */
-		gnuplot_resetplot(h);
-		gnuplot_plot_x(h, amplitude, FRAME_SIZE, "FFT");
+		// gnuplot_resetplot(h);
+		// gnuplot_plot_x(h, amplitude, FRAME_SIZE, "FFT");
+		// sleep(1);
+		double chromas[NB_NOTES_OCTAVE];
+
+  	gnuplot_resetplot(h);
+		computeChromas(spec, FRAME_SIZE, sfinfo.samplerate, chromas);
+		gnuplot_plot_x(h, chromas, NB_NOTES_OCTAVE, "Chromas");
 		sleep(1);
 
     /* SPECTRAL FLUX !!! */
