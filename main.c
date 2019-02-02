@@ -14,11 +14,12 @@
 #include "note.h"
 #include "pitch.h"
 #include "chromas.h"
+#include "sequence.h"
 
 void
 print_usage(char *progname)
 {
-  printf("\n Usage : %s <input file> <output file>\n", progname);
+  printf("\n Usage : %s <input file> <output file> <print>(opt)\n", progname);
   puts("\n");
 }
 
@@ -26,6 +27,7 @@ int
 main(int argc, char * argv [])
 {
   char 		*progname, *infilename, *outfilename;
+  int print = 0;
   SNDFILE	 	*infile = NULL;
   SNDFILE		*outfile = NULL;
   SF_INFO	 	sfinfo;
@@ -35,7 +37,7 @@ main(int argc, char * argv [])
 
   progname = strrchr(argv[0], '/');
   progname = progname ? progname + 1 : argv[0];
-	if(argc != 3) {
+	if(argc != 3 && argc != 4) {
 
     print_usage(progname);
     return 1;
@@ -43,6 +45,17 @@ main(int argc, char * argv [])
 
   infilename = argv[1];
   outfilename = argv[2];
+  if(argc == 4){
+    print = atoi(argv[3]);
+  }
+
+  int nb_frames_seq = 0;
+  sequence * seq = fill_sequence(infilename, &nb_frames_seq, CHROMA_SIZE);
+
+  if (seq == NULL){
+    printf("erreur calcul sequence \n");
+    return 1;
+  }
 
 	if(strcmp(infilename, outfilename) == 0) {
     printf("Error : Input and output filenames are the same.\n\n");
@@ -125,10 +138,12 @@ main(int argc, char * argv [])
 		// sleep(1);
 		double chromas[NB_NOTES_OCTAVE];
 
-  	gnuplot_resetplot(h);
-		computeChromas(spec, FRAME_SIZE, sfinfo.samplerate, chromas);
-		gnuplot_plot_x(h, chromas, NB_NOTES_OCTAVE, "Chromas");
-		sleep(1);
+    if(print == 1){
+      gnuplot_resetplot(h);
+      computeChromas(spec, FRAME_SIZE, sfinfo.samplerate, chromas);
+      gnuplot_plot_x(h, chromas, NB_NOTES_OCTAVE, "Chromas");
+      sleep(1);
+    }
 
     /* SPECTRAL FLUX !!! */
     FS = 0.0;
@@ -165,9 +180,11 @@ main(int argc, char * argv [])
 
 
   /* PLOT */
-  gnuplot_resetplot(h);
-  gnuplot_plot_x(h,spectralFlux,nb_frames,"Beats");
-  sleep(2);
+  if(print == 1){
+    gnuplot_resetplot(h);
+    gnuplot_plot_x(h,spectralFlux,nb_frames,"Beats");
+    sleep(2);
+  }
 
   /* TEMPO ESTIMATION */
   int imax = getTempoEstimation(nb_frames_in,spectralFlux);
@@ -216,9 +233,11 @@ main(int argc, char * argv [])
 
   printf("max intercorrelation %d\n",peigne_imax);
   /* PLOT */
-  gnuplot_resetplot(h);
-  gnuplot_plot_x(h,gamma,nb_frames_in,"Peigne");
-  sleep(2);
+  if(print == 1){
+    gnuplot_resetplot(h);
+    gnuplot_plot_x(h,gamma,nb_frames_in,"Peigne");
+    sleep(2);
+  }
 
   // sf_close(infile);
 
@@ -275,6 +294,8 @@ main(int argc, char * argv [])
     }
     nb_frames++;
   }
+
+  calculate_autosimilarity_matrix("image.ppm",seq,nb_frames_seq);
 
 
   sf_close(infile);

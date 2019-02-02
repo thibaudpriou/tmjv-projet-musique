@@ -3,15 +3,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-//#define SIZE 12 //32 if MFCC, 12 if CHROMA
+#include "samples.h"
+#include "common.h"
+#include "chromas.h"
+
+#define CHROMA_SIZE 12
+#define MFCC_SIZE 32
 
 typedef struct sequence {
   int size;
   double *data;
 } sequence;
 
-sequence* create_sequence(int size);
+sequence init_sequence(int size);
+sequence* fill_sequence(char* infilename, int *nb_frames, int seq_size);
 
 float cosine_distance(sequence s1, sequence s2);
 
