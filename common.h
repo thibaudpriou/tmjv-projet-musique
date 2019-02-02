@@ -13,4 +13,8 @@
 
 int my_modulo(int x, int y);
 
+double mean(double *array, const int size);
+double meanInt(int *array, const int size);
+
+
 #endif
