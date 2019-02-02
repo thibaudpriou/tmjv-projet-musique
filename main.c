@@ -62,7 +62,7 @@ main(int argc, char * argv [])
   /* Open the output file. */
   if((outfile = sf_open(outfilename, SFM_WRITE, &sfinfo)) == NULL)
   {
-    printf("Not able to open input file %s.\n", outfilename);
+    printf("Not able to open output file %s.\n", outfilename);
     puts(sf_strerror(NULL));
     return 1;
   };
@@ -231,7 +231,7 @@ main(int argc, char * argv [])
   /* Open the output file. */
   if((outfile = sf_open(outfilename, SFM_WRITE, &sfinfo)) == NULL)
   {
-    printf("Not able to open input file %s.\n", outfilename);
+    printf("Not able to open output file %s.\n", outfilename);
     puts(sf_strerror(NULL));
     return 1;
   };
