@@ -24,4 +24,6 @@ void getNotesFrequenciesAt(int octave, double *);
 void getNotesFrequenciesMatrix(double **);
 void getNotesFrequenciesArray(double *);
 
+void note2string(int, char*);
+
 #endif

@@ -69,11 +69,12 @@ main(int argc, char * argv [])
 		return 1;
 	}
 
-	int mode;
-	int pitch;
-	calculate_pitch(seqs2, nb_frames_seq, &pitch, &mode);
+	int mode, note;
+	char pitch[2];
+	calculate_pitch(seqs2, nb_frames_seq, &note, &mode);
 	printf("Mode : %s\n", (mode == MODE_MAJOR) ? "Majeur" : "Mineur");
-	printf("Pitch : %d\n", pitch);
+  note2string(note, pitch);
+	printf("Pitch : %s\n", pitch);
 
 	free_sequence(seqs2, nb_frames_seq);
 
