@@ -2,9 +2,9 @@
 #include "math.h"
 
 fftw_plan
-fft_init (complex in[FRAME_SIZE], complex spec[FRAME_SIZE])
+fft_init (complex *in, complex *spec, int fft_size)
 {
-  return fftw_plan_dft_1d (FRAME_SIZE, in, spec, FFTW_FORWARD, FFTW_ESTIMATE);
+  return fftw_plan_dft_1d (fft_size, in, spec, FFTW_FORWARD, FFTW_ESTIMATE);
 }
 
 void

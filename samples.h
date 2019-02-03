@@ -4,10 +4,10 @@
 #include "lib/sndfile.h"
 #include "common.h"
 
-void fill_buffer(double *, double *);
+void fill_buffer(double *, double *, int, int);
 int read_n_samples (SNDFILE *, double *, int, int);
 int write_n_samples (SNDFILE *, double *, int, int);
-int read_samples (SNDFILE *, double *, int);
-int write_samples (SNDFILE *, double *, int);
+int read_samples (SNDFILE *, double *, int, int);
+int write_samples (SNDFILE *, double *, int, int);
 
 #endif

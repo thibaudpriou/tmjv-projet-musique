@@ -19,7 +19,7 @@
 void
 print_usage(char *progname)
 {
-  printf("\n Usage : %s <input file> <output file>(opt)\n", progname);
+  printf("\n Usage : %s <input file> <output file>\n", progname);
   puts("\n");
 }
 
@@ -41,7 +41,8 @@ main(int argc, char * argv [])
 
 	int nb_frames_seq = 0;
   int samplerate = 0;
-  sequence *seqs = fill_sequence(infilename, &nb_frames_seq, &samplerate, CHROMA_SIZE);
+  sequence *seqs;
+  seqs = fill_sequence(infilename, &nb_frames_seq, &samplerate, FRAME_SIZE, HOP_SIZE, CHROMA_SIZE);
 
   if (seqs == NULL){
     printf("erreur calcul sequence \n");
@@ -49,19 +50,32 @@ main(int argc, char * argv [])
   }
 
   /* TEMPO ESTIMATION */
-  double tempo = calculate_tempo(seqs, nb_frames_seq, samplerate);
-  printf("Tempo en BPM %f\n", tempo);
+  double tempo = calculate_tempo(seqs, nb_frames_seq, samplerate, FRAME_SIZE, HOP_SIZE);
+  printf("Tempo en BPM : %f\n", tempo);
 
-	/* TEMPO ESTIMATION */
+	/* AUTOSIMILARITY MATRIX */
   calculate_autosimilarity_matrix(outputfilename, seqs, nb_frames_seq);
+  printf("Image d'autosimilarité sauvegardée : %s\n", outputfilename);
 
-	/* TEMPO ESTIMATION */
+	free_sequence(seqs, nb_frames_seq);
+
+	/* PITCH ESTIMATION */
+  nb_frames_seq = 0;
+  samplerate = 0;
+	sequence *seqs2 = fill_sequence(infilename, &nb_frames_seq, &samplerate, PITCH_FRAME_SIZE, PITCH_HOP_SIZE, CHROMA_SIZE);
+
+	if (seqs2 == NULL){
+		printf("erreur calcul sequence \n");
+		return 1;
+	}
+
 	int mode;
 	int pitch;
-	calculate_pitch(seqs, nb_frames_seq, &pitch, &mode);
-	printf("Mode %s\n", (mode == MODE_MAJOR) ? "Majeur" : "Mineur");
+	calculate_pitch(seqs2, nb_frames_seq, &pitch, &mode);
+	printf("Mode : %s\n", (mode == MODE_MAJOR) ? "Majeur" : "Mineur");
 	printf("Pitch : %d\n", pitch);
 
+	free_sequence(seqs2, nb_frames_seq);
 
   return 0;
 } /* main */

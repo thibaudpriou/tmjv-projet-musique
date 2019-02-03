@@ -1,23 +1,23 @@
 #include "samples.h"
 
 void
-fill_buffer(double *buffer, double *new_buffer)
+fill_buffer(double *buffer, double *new_buffer, int fft_size, int hop_size)
 {
   int i;
-  double tmp[FRAME_SIZE-HOP_SIZE];
+  double tmp[fft_size - hop_size];
 
   /* save */
-  for (i=0; i<FRAME_SIZE-HOP_SIZE; i++){
-    tmp[i] = buffer[i+HOP_SIZE];
+  for (i=0; i<fft_size - hop_size; i++){
+    tmp[i] = buffer[i+hop_size];
   }
 
   /* save offset */
-  for (i=0; i<(FRAME_SIZE-HOP_SIZE); i++) {
+  for (i=0; i<(fft_size-hop_size); i++) {
     buffer[i] = tmp[i];
   }
 
-  for (i=0;i<HOP_SIZE;i++) {
-    buffer[FRAME_SIZE-HOP_SIZE+i] = new_buffer[i];
+  for (i=0; i<hop_size; i++) {
+    buffer[fft_size - hop_size + i] = new_buffer[i];
   }
 }
 
@@ -77,13 +77,13 @@ write_n_samples (SNDFILE * outfile, double * buffer, int channels, int n)
 
 
 int
-read_samples (SNDFILE * infile, double * buffer, int channels)
+read_samples (SNDFILE * infile, double * buffer, int channels, int hop_size)
 {
-  return read_n_samples (infile, buffer, channels, HOP_SIZE);
+  return read_n_samples (infile, buffer, channels, hop_size);
 }
 
 int
-write_samples (SNDFILE * outfile, double * buffer, int channels)
+write_samples (SNDFILE * outfile, double * buffer, int channels, int hop_size)
 {
-  return write_n_samples (outfile, buffer, channels, HOP_SIZE);
+  return write_n_samples (outfile, buffer, channels, hop_size);
 }

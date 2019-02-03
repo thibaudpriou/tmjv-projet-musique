@@ -1,7 +1,10 @@
 #include "sequence.h"
 #include "rythme.h"
+#include "pitch.h"
 
-sequence init_sequence(int chroma_size, int fft_size){
+sequence
+init_sequence(int chroma_size, int fft_size)
+{
   sequence *s = malloc(sizeof(struct sequence));
   s->chroma_size = chroma_size;
   s->chromas = malloc(chroma_size * sizeof(double));
@@ -10,7 +13,8 @@ sequence init_sequence(int chroma_size, int fft_size){
   return *s;
 }
 
-sequence* fill_sequence(char* infilename, int *nb_frames, int *samplerate, int chroma_size)
+sequence*
+fill_sequence(char* infilename, int *nb_frames, int *samplerate, int fft_size, int hop_size, int chroma_size)
 {
   SNDFILE	 	*infile = NULL ;
   SF_INFO	 	sfinfo ;
@@ -23,13 +27,13 @@ sequence* fill_sequence(char* infilename, int *nb_frames, int *samplerate, int c
 
   /* Read WAV and Compute Chromas */
   *nb_frames = 0;
-  double new_buffer[HOP_SIZE];
-  double buffer[FRAME_SIZE];
+  double new_buffer[hop_size];
+  double buffer[fft_size];
 
   int i;
-  for (i=0;i<(FRAME_SIZE/HOP_SIZE-1);i++){
-    if (read_samples (infile, new_buffer, sfinfo.channels)==1){
-    	fill_buffer(buffer, new_buffer);
+  for (i=0; i<( fft_size/hop_size -1); i++){
+    if (read_samples (infile, new_buffer, sfinfo.channels, hop_size) == 1){
+    	fill_buffer(buffer, new_buffer, fft_size, hop_size);
     } else {
   	  printf("not enough samples !!\n");
   	  return NULL;
@@ -38,47 +42,48 @@ sequence* fill_sequence(char* infilename, int *nb_frames, int *samplerate, int c
 
   *samplerate = (int)sfinfo.samplerate;
 
-  printf("taille : %d échantillons \n", (int)sfinfo.frames);
-  int seq_size = (int)ceil((double) sfinfo.frames / HOP_SIZE);
-  printf("nbre symboles : %d \n", seq_size);
+  // printf("Taille : %d échantillons \n", (int)sfinfo.frames);
+  int seq_size = (int)ceil((double) sfinfo.frames / hop_size);
+  // printf("Calcul de FFT sur une taille de %d échantillons\n", fft_size);
+  // printf("Nombres séquences : %d \n", seq_size);
 
   sequence* seqs = malloc(sizeof(struct sequence) * seq_size);
 
-  complex samples[FRAME_SIZE];
-  complex spec[FRAME_SIZE];
+  complex samples[fft_size];
+  complex spec[fft_size];
 
   double *chromas = malloc(chroma_size * sizeof(double));
 
   /* FFT init */
-  fftw_plan fft = fft_init(samples, spec);
+  fftw_plan fft = fft_init(samples, spec, fft_size);
 
-  while (read_samples (infile, new_buffer, sfinfo.channels)==1){
-      seqs[(*nb_frames)] = init_sequence(chroma_size, FRAME_SIZE);
+  while (read_samples (infile, new_buffer, sfinfo.channels, hop_size) == 1){
+    seqs[(*nb_frames)] = init_sequence(chroma_size, fft_size);
 
-      /* hop size */
-      fill_buffer(buffer, new_buffer);
+    /* hop size */
+    fill_buffer(buffer, new_buffer, fft_size, hop_size);
 
-      // fft input
-      for (i = 0; i < FRAME_SIZE; i++){
-      	samples[i] = buffer[i];
-      }
-
-      // compute fft
-      fft_process(fft);
-
-      // save fft
-      for (i = 0; i < FRAME_SIZE; i++){
-        seqs[(*nb_frames)].fft[i] = spec[i];
-    	}
-
-      // compute chromas
-      computeChromas(seqs[(*nb_frames)].fft, FRAME_SIZE, *samplerate, chromas);
-      for (i = 0; i < chroma_size; i++){
-    	  seqs[(*nb_frames)].chromas[i] = chromas[i];
-    	}
-
-      (*nb_frames)++;
+    // fft input
+    for (i = 0; i < fft_size; i++){
+    	samples[i] = buffer[i];
     }
+
+    // compute fft
+    fft_process(fft);
+
+    // save fft
+    for (i = 0; i < fft_size; i++){
+      seqs[(*nb_frames)].fft[i] = spec[i];
+  	}
+
+    // compute chromas
+    computeChromas(seqs[(*nb_frames)].fft, fft_size, *samplerate, chromas);
+    for (i = 0; i < chroma_size; i++) {
+  	  seqs[(*nb_frames)].chromas[i] = chromas[i];
+  	}
+
+    (*nb_frames)++;
+  }
 
   /* FFT exit */
   fft_exit(fft);
@@ -91,7 +96,18 @@ sequence* fill_sequence(char* infilename, int *nb_frames, int *samplerate, int c
   return seqs;
 }
 
-float cosine_distance(sequence s1, sequence s2){
+void
+free_sequence(sequence *seqs, int nb_frames)
+{
+  for (int i = 0; i < nb_frames; i++) {
+    free(seqs[i].fft);
+    free(seqs[i].chromas);
+  }
+}
+
+float
+cosine_distance(sequence s1, sequence s2)
+{
 	float product=0;
 	float root1=0;
 	float root2=0;
@@ -141,46 +157,43 @@ calculate_autosimilarity_matrix(char *imageName, sequence *seq, int nb_frames)
 }
 
 double
-calculate_tempo(sequence *seq, int nb_frames, int samplerate)
+calculate_tempo(sequence *seq, int nb_frames, int samplerate, int fft_size, int hop_size)
 {
-  double amplitude[FRAME_SIZE];
-  double amplitude_prev[FRAME_SIZE];
+  double amplitude[fft_size];
+  double amplitude_prev[fft_size];
 
   double spectralFlux[nb_frames];
   double FS = 0.0;
   double tmp;
 
   /* init amplitude_prev */
-  for(int i = 0; i < FRAME_SIZE; i++) {
+  for(int i = 0; i < fft_size; i++) {
       amplitude_prev[i] = 0.0;
   }
 
   /* loop through sequences FFT */
   for (int i = 0; i < nb_frames; i++) {
 
-    /* Store FFT */
-    for(int j = 0; j < FRAME_SIZE; j++) {
+    /* compute SpectralFlux */
+    FS = 0.0;
+    for(int j = 0; j < fft_size; j++) {
       amplitude_prev[j] = amplitude[j];
       amplitude[j] = cabs( seq[i].fft[j] );
-    }
 
-    /* Compute Spectral Flux */
-    FS = 0.0;
-    for(int j = 0; j < FRAME_SIZE; j++) {
       tmp = amplitude[j] - amplitude_prev[j];
       if(tmp > 0) {
           FS += tmp;
       }
     }
 
-    FS /= (double) FRAME_SIZE;
+    FS /= (double) fft_size;
 
     /* threshold detection */
     spectralFlux[i] = (FS > 0.3) ? FS : 0.0;
   }
 
   double tempo = getTempoEstimation(nb_frames, spectralFlux);
-  double tempo_bpm = 60.0 / ((double) tempo * HOP_SIZE / samplerate);
+  double tempo_bpm = 60.0 / ((double) tempo * hop_size / samplerate);
 
   return tempo_bpm;
 }
