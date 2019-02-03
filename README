@@ -13,24 +13,16 @@ Pour installe FFTW :
 
 
 ## But
-Sortir des informations d'un fichier WAV. Ces informations sont celles qui ont été vus en cours et mais aussi tout ce qui peut être jugé utile.
+Sortir des informations d'un fichier WAV. Ces informations sont celles qui ont été vus en cours et mais aussi toutes celles ce qui peuvent être jugées utiles.
 
 Interface : GUI ou CLI au choix.
 
 Exemples d'informations :
 
-- Tempo
-- Tonalité
-- Suite d'accords
+- Tempo (codé)
+- Tonalité (codé)
+- Suite d'accords 
 - Spectrogramme
 - Interprétation musicale
+- auto-similarité (codé)
 
-
-## NOTES
-chroma = vecteur de dimension 12 récupéré à partir d'un spectre
-
-types de chromas améliorés
-HPCP
-EHPCP
-
-D'abord faire une conversion de l'index de la fft vers la frequence puis de la freq vers la note
